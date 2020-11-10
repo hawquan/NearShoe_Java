@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".AdminDashboard">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/adminImage_id"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/bg_circle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text="Hi,"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAdminWelcome_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway_bold"
+                    android:text=""
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnAdminProfile_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_green_light"
+            android:text="Your Profile" />
+
+        <Button
+            android:id="@+id/btnAdminServiceStatus_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_blue_bright"
+            android:text="Update Service Status" />
+
+        <Button
+            android:id="@+id/btnStaffManagement_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_green_dark"
+            android:text="Staff Management" />
+
+        <Button
+            android:id="@+id/btnProductManagement_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_orange_light"
+            android:text="Product Management" />
+
+        <Button
+            android:id="@+id/btnAdminViewCustFeedback_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_orange_light"
+            android:text="View Customer Feedback" />
+
+        <Button
+            android:id="@+id/btnAdminViewReports_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/holo_orange_light"
+            android:text="View Reports" />
+
+        <Button
+            android:id="@+id/btnAdminLogout_id"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_margin="4dp"
+            android:text="Logout" />
+    </LinearLayout>
+</ScrollView>
