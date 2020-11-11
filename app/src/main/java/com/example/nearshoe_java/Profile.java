@@ -62,6 +62,10 @@ public class Profile extends AppCompatActivity {
             if (!userMC.getImage().equals("")) {
                 Glide.with(Profile.this).load(userMC.getImage()).into(profileImage);
             }
+            else
+            {
+                Glide.with(Profile.this).load(R.drawable.ic_camera).into(profileImage);
+            }
         }
         //getCurrentUserInformation();
         btnGoBack.setOnClickListener(new View.OnClickListener() {
@@ -79,37 +83,6 @@ public class Profile extends AppCompatActivity {
         });
 
 
-    }
-
-    private void getCurrentUserInformation() {
-        DB_USERS_REF.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userMC = new UserMC();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds != null) {
-                        etName.setText(ds.child("name").getValue(String.class));
-                        etPhone.setText(ds.child("phone").getValue(String.class));
-                        etEmail.setText(ds.child("email").getValue(String.class));
-                        etAddress.setText(ds.child("address").getValue(String.class));
-                        if (!userMC.getImage().equals("")) {
-                            Picasso.get().load(userMC.getImage()).into(profileImage);
-                        }
-                        Log.i("Profile", ds.child("name").getValue(String.class));
-                    } else {
-                        Log.i("Profile", "Null");
-
-                    }
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void saveProfile() {

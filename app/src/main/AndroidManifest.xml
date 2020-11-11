@@ -9,18 +9,48 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NearShoe_Java">
-        <activity android:name=".AdminDashboard"></activity>
+        <activity
+            android:name=".CustomerNeedService"
+            android:label="Pickup or Delivery Services" />
+        <activity
+            android:name=".CustomerProducts"
+            android:label="Products" />
+        <activity
+            android:name=".CustomerServiceStatus"
+            android:label="Service Status" />
+        <activity
+            android:name=".AdminUpdateServiceStatus"
+            android:label="Service Status" />
+        <activity
+            android:name=".AdminViewReports"
+            android:label="Reports" />
+        <activity
+            android:name=".AdminViewFeedback"
+            android:label="Customer Feedback" />
+        <activity
+            android:name=".AdminProductManagement"
+            android:label="Product Management" />
+        <activity
+            android:name=".AdminStaffManagement"
+            android:label="Staff Management" />
+        <activity android:name=".AdminDashboard" />
         <activity
             android:name=".Profile"
-            android:parentActivityName=".CustomerDashboard"
+            android:label="Profile"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
-        <activity android:name=".CustomerDashboard"></activity>
-        <activity android:name=".ForgotPassword" />
+        <activity
+            android:name=".CustomerDashboard"
+            android:label="Customer Dashboard" />
+        <activity
+            android:name=".ForgotPassword"
+            android:label="Password Reset" />
         <activity
             android:name=".Register"
+            android:label="Register"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
             android:name=".Login"
+            android:label="Login"
             android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

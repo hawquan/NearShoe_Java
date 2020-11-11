@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +19,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class CustomerDashboard extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class CustomerDashboard extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth mAuth;
-    Button btnLogout, btnProfile;
+    Button btnLogout, btnProfile, btnAvailServices, btnServiceStatus, btnProducts;
     TextView tvWelcome;
     UserMC userMC;
-    ImageView userImage;
+    CircleImageView profileImage;
+    Intent getDataIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,30 +36,33 @@ public class CustomerDashboard extends AppCompatActivity {
         setContentView(R.layout.activity_customer_dashboard);
         mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
+        getDataIntent = getIntent();
+        userMC = getDataIntent.getParcelableExtra("UserMC");
         initializeComponents();
+        if (userMC != null) {
+            tvWelcome.setText(userMC.getName());
+            if (!userMC.getImage().equals("")) {
+                Glide.with(CustomerDashboard.this).load(userMC.getImage()).into(profileImage);
+            } else {
+                Glide.with(CustomerDashboard.this).load(R.drawable.ic_camera).into(profileImage);
+            }
+        }
     }
 
     private void initializeComponents() {
-        userImage = findViewById(R.id.userImage_id);
-        btnProfile = findViewById(R.id.btnProfile_id);
+        profileImage = findViewById(R.id.userImage_id);
         tvWelcome = findViewById(R.id.tvWelcome_id);
+        btnProfile = findViewById(R.id.btnProfile_id);
+        btnServiceStatus = findViewById(R.id.btnServiceStatus_id);
+        btnProducts = findViewById(R.id.btnProducts_id);
+        btnAvailServices = findViewById(R.id.btnNeedService_id);
         btnLogout = findViewById(R.id.btnLogout_id);
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CustomerDashboard.this, Profile.class);
-                intent.putExtra("UserMC", userMC);
-                startActivity(intent);
-            }
-        });
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOutUser();
-            }
-        });
+        btnLogout.setOnClickListener(this);
+        btnProfile.setOnClickListener(this);
+        btnAvailServices.setOnClickListener(this);
+        btnServiceStatus.setOnClickListener(this);
+        btnProducts.setOnClickListener(this);
     }
 
     private void signOutUser() {
@@ -79,13 +84,18 @@ public class CustomerDashboard extends AppCompatActivity {
     }
 
     private void getUserDetails(FirebaseUser currentUser) {
-        Utilities.DB_USERS_REF.addListenerForSingleValueEvent(new ValueEventListener() {
+        Utilities.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userMC = new UserMC();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    userMC = dataSnapshot.getValue(UserMC.class);
-                }
+                userMC.setId(snapshot.child("id").getValue(String.class));
+                userMC.setName(snapshot.child("name").getValue(String.class));
+                userMC.setEmail(snapshot.child("email").getValue(String.class));
+                userMC.setPassword(snapshot.child("password").getValue(String.class));
+                userMC.setAddress(snapshot.child("address").getValue(String.class));
+                userMC.setPhone(snapshot.child("phone").getValue(String.class));
+                userMC.setUserType(snapshot.child("userType").getValue(String.class));
+                userMC.setImage(snapshot.child("image").getValue(String.class));
             }
 
             @Override
@@ -102,6 +112,24 @@ public class CustomerDashboard extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(this, "Click on Logout to Logout of Application", Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.btnProfile_id) {
+            Intent intent = new Intent(CustomerDashboard.this, Profile.class);
+            intent.putExtra("UserMC", userMC);
+            startActivity(intent);
+        } else if (id == R.id.btnServiceStatus_id) {
+            startActivity(new Intent(CustomerDashboard.this, CustomerServiceStatus.class));
+        } else if (id == R.id.btnProducts_id) {
+            startActivity(new Intent(CustomerDashboard.this, CustomerProducts.class));
+        } else if (id == R.id.btnNeedService_id) {
+            startActivity(new Intent(CustomerDashboard.this, CustomerNeedService.class));
+        } else if (id == R.id.btnLogout_id) {
+            signOutUser();
+        }
     }
 }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,14 +19,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AdminDashboard extends AppCompatActivity implements View.OnClickListener {
 
     TextView welcome;
     Intent getDataIntent;
     UserMC userMC;
     FirebaseAuth mAuth;
-    ImageView profileImage;
-    Button btnProfile, btnUpdateServiceStatus, btnStaffManagement, btnProductManagement, btnLogout;
+    CircleImageView profileImage;
+    Button btnViewReports, btnCustomerFeedback, btnProfile, btnUpdateServiceStatus, btnStaffManagement, btnProductManagement, btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +43,11 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
             welcome.setText(userMC.getName());
             if (!userMC.getImage().equals("")) {
                 Glide.with(AdminDashboard.this).load(userMC.getImage()).into(profileImage);
+            } else {
+                Glide.with(AdminDashboard.this).load(R.drawable.ic_camera).into(profileImage);
             }
         }
 
-    }
-
-    private void initializeComponents() {
-        profileImage = findViewById(R.id.adminImage_id);
-        welcome = findViewById(R.id.tvAdminWelcome_id);
-        btnLogout = findViewById(R.id.btnAdminLogout_id);
-        btnProfile = findViewById(R.id.btnAdminProfile_id);
-        btnUpdateServiceStatus = findViewById(R.id.btnAdminServiceStatus_id);
-        btnStaffManagement = findViewById(R.id.btnStaffManagement_id);
-        btnProductManagement = findViewById(R.id.btnProductManagement_id);
-
-        btnProfile.setOnClickListener(this);
-        btnProductManagement.setOnClickListener(this);
-        btnStaffManagement.setOnClickListener(this);
-        btnUpdateServiceStatus.setOnClickListener(this);
-        btnLogout.setOnClickListener(this);
     }
 
     @Override
@@ -73,15 +60,15 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
         } else if (id == R.id.btnAdminLogout_id) {
             signOutUser();
         } else if (id == R.id.btnAdminServiceStatus_id) {
-
+            startActivity(new Intent(AdminDashboard.this, AdminUpdateServiceStatus.class));
         } else if (id == R.id.btnStaffManagement_id) {
-
+            startActivity(new Intent(AdminDashboard.this, AdminStaffManagement.class));
         } else if (id == R.id.btnProductManagement_id) {
-
+            startActivity(new Intent(AdminDashboard.this, AdminProductManagement.class));
         } else if (id == R.id.btnAdminViewReports_id) {
-
+            startActivity(new Intent(AdminDashboard.this, AdminViewReports.class));
         } else if (id == R.id.btnAdminViewCustFeedback_id) {
-
+            startActivity(new Intent(AdminDashboard.this, AdminViewFeedback.class));
         }
     }
 
@@ -102,13 +89,18 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
     }
 
     private void getUserDetails(FirebaseUser currentUser) {
-        Utilities.DB_USERS_REF.addListenerForSingleValueEvent(new ValueEventListener() {
+        Utilities.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userMC = new UserMC();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    userMC = dataSnapshot.getValue(UserMC.class);
-                }
+                userMC.setId(snapshot.child("id").getValue(String.class));
+                userMC.setName(snapshot.child("name").getValue(String.class));
+                userMC.setEmail(snapshot.child("email").getValue(String.class));
+                userMC.setPassword(snapshot.child("password").getValue(String.class));
+                userMC.setAddress(snapshot.child("address").getValue(String.class));
+                userMC.setPhone(snapshot.child("phone").getValue(String.class));
+                userMC.setUserType(snapshot.child("userType").getValue(String.class));
+                userMC.setImage(snapshot.child("image").getValue(String.class));
             }
 
             @Override
@@ -124,4 +116,30 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this, "User Logged Out Successfully!!!", Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Click on Logout to Logout of Application", Toast.LENGTH_SHORT).show();
+    }
+
+    private void initializeComponents() {
+        profileImage = findViewById(R.id.profileImage);
+        welcome = findViewById(R.id.tvAdminWelcome_id);
+        btnLogout = findViewById(R.id.btnAdminLogout_id);
+        btnProfile = findViewById(R.id.btnAdminProfile_id);
+        btnUpdateServiceStatus = findViewById(R.id.btnAdminServiceStatus_id);
+        btnStaffManagement = findViewById(R.id.btnStaffManagement_id);
+        btnProductManagement = findViewById(R.id.btnProductManagement_id);
+        btnViewReports = findViewById(R.id.btnAdminViewReports_id);
+        btnCustomerFeedback = findViewById(R.id.btnAdminViewCustFeedback_id);
+        btnProfile.setOnClickListener(this);
+        btnProductManagement.setOnClickListener(this);
+        btnStaffManagement.setOnClickListener(this);
+        btnUpdateServiceStatus.setOnClickListener(this);
+        btnViewReports.setOnClickListener(this);
+        btnCustomerFeedback.setOnClickListener(this);
+        btnLogout.setOnClickListener(this);
+    }
+
+
 }

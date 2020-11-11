@@ -113,7 +113,7 @@ public class Register extends AppCompatActivity {
                                 Toast.makeText(Register.this, "User created and saved Successfully!!!", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                                 Log.i("RegisterActivity", "User created and saved Successfully!!!");
-                                redirectToDashboard();
+                                redirectToDashboard(userMC);
                             } else {
                                 Log.i("RegisterActivity", task.getException().getMessage());
                                 Toast.makeText(Register.this, "User created but not saved due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -127,8 +127,16 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    private void redirectToDashboard() {
-        startActivity(new Intent(Register.this, CustomerDashboard.class));
+    private void redirectToDashboard(UserMC userMC) {
+        Intent intent;
+        if (userMC.getUserType().equals("Admin")) {
+            intent = new Intent(Register.this, AdminDashboard.class);
+        } else {
+            intent = new Intent(Register.this, CustomerDashboard.class);
+        }
+        intent.putExtra("UserMC", userMC);
+        startActivity(intent);
+        finish();
     }
 
     private void initializeComponents() {
