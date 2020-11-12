@@ -39,12 +39,15 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_map">Map</string>
+    <string name="todo">TODO</string>
+    <string name="productname">ProductName</string>
+    <string name="price">Price</string>
 
     <string-array name="quantity_string_array">
         <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
-        <item>5(Max)</item>
+        <item>5</item>
     </string-array>
 </resources>

@@ -59,6 +59,8 @@ public class CustomerProducts extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         initializeComponents();
         getPosts();
+        /*NUll Cart*/
+        DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).removeValue();
     }
 
     @Override
@@ -131,7 +133,7 @@ public class CustomerProducts extends AppCompatActivity {
                                     if (dataSnapshot.child(mAuth.getCurrentUser().getUid()).hasChild(myPost.getId())) {
                                         DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).child(myPost.getId()).removeValue();
                                         int count = Integer.parseInt(textCartItemCount.getText().toString());
-                                        int newValue = count-1;
+                                        int newValue = count - 1;
                                         setupBadge(newValue);
                                         Toast.makeText(CustomerProducts.this, "Item removed from Cart", Toast.LENGTH_SHORT).show();
                                     } else {
@@ -143,15 +145,17 @@ public class CustomerProducts extends AppCompatActivity {
                                         cartItemMC.setId(myPost.getId());
                                         cartItemMC.setRequesterId(currentUser);
                                         cartItemMC.setQuantity("1");
+                                        cartItemMC.setTempPrice(myPost.getPrice());
                                         cartItemMC.setItemName(myPost.getName());
                                         cartItemMC.setItemPrice(myPost.getPrice());
+                                        cartItemMC.setImageUrl(myPost.getImageUrl());
                                         DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).child(myPost.getId()).setValue(cartItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 mProgressDialog.dismiss();
                                                 if (task.isSuccessful()) {
                                                     int count = Integer.parseInt(textCartItemCount.getText().toString());
-                                                    int newValue = count+1;
+                                                    int newValue = count + 1;
                                                     setupBadge(newValue);
                                                     Toast.makeText(CustomerProducts.this, "Item Added In Cart", Toast.LENGTH_SHORT).show();
                                                 } else {
@@ -238,8 +242,9 @@ public class CustomerProducts extends AppCompatActivity {
     private void setupBadge(int mCartItemCount) {
         if (textCartItemCount != null) {
             if (mCartItemCount == 0) {
+                textCartItemCount.setText(String.valueOf(Math.min(mCartItemCount, 99)));
                 if (textCartItemCount.getVisibility() != View.GONE) {
-                    textCartItemCount.setVisibility(View.GONE);
+                    //textCartItemCount.setVisibility(View.GONE);
                 }
             } else {
                 textCartItemCount.setText(String.valueOf(Math.min(mCartItemCount, 99)));
@@ -269,7 +274,8 @@ public class CustomerProducts extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).removeValue();
                 Toast.makeText(CustomerProducts.this, "Cart Items Discarded", Toast.LENGTH_SHORT).show();
-                setupBadge(0);
+                int count = 0;
+                setupBadge(count);
             }
         });
         alertDialogBuilder.setNegativeButton("View Cart", new DialogInterface.OnClickListener() {
