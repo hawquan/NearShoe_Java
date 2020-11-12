@@ -28,8 +28,8 @@ public class Register extends AppCompatActivity {
     ProgressDialog progressDialog;
     Button btnGotoLogin, btnRegister;
     EditText etName, etEmail, etPassword;
-    RadioGroup userTypeRadioGroup;
-    RadioButton customerRadioButton, adminRadioButton;
+    /*RadioGroup userTypeRadioGroup;
+    RadioButton customerRadioButton, adminRadioButton;*/
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     FirebaseAuth mAuth;
     String userType = "Customer";
@@ -50,7 +50,7 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        userTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        /*userTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rb_customer_id) {
@@ -59,7 +59,7 @@ public class Register extends AppCompatActivity {
                     userType = "Admin";
                 }
             }
-        });
+        });*/
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,8 +147,8 @@ public class Register extends AppCompatActivity {
         etName = findViewById(R.id.etName_id);
         etEmail = findViewById(R.id.etEmail_id);
         etPassword = findViewById(R.id.etPassword_id);
-        userTypeRadioGroup = findViewById(R.id.rg_userType_id);
-        customerRadioButton = findViewById(R.id.rb_customer_id);
-        adminRadioButton = findViewById(R.id.rb_admin_id);
+//        userTypeRadioGroup = findViewById(R.id.rg_userType_id);
+//        customerRadioButton = findViewById(R.id.rb_customer_id);
+//        adminRadioButton = findViewById(R.id.rb_admin_id);
     }
 }

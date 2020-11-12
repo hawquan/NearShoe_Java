@@ -12,24 +12,33 @@
         android:id="@+id/view_cart_recycler_view_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:background="#F7F7F7"
+        android:padding="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="7">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
-            android:id="@+id/itemCount_id"
+            android:id="@+id/totalAmountTV_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Total Items in Cart:" />
+            android:layout_margin="8dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <TextView
+        <Button
+            android:id="@+id/placeOrderBtn_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DUmmy" />
+            android:layout_margin="8dp"
+            android:text="Place Order" />
     </LinearLayout>
 
 </LinearLayout>

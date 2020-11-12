@@ -45,10 +45,11 @@ public class CartItemMC {
         this.itemName = itemName;
     }
 
-    public CartItemMC(String id, String itemPrice, String itemName, String requesterId, String quantity, String imageUrl) {
+    public CartItemMC(String id, String itemPrice, String tempPrice, String itemName, String requesterId, String quantity, String imageUrl) {
         this.id = id;
         this.itemPrice = itemPrice;
         this.itemName = itemName;
+        this.tempPrice = tempPrice;
         this.requesterId = requesterId;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
@@ -56,10 +57,19 @@ public class CartItemMC {
 
     String id;
     String itemPrice;
+    String tempPrice;
     String itemName;
     String requesterId;
     String quantity;
     String imageUrl;
+
+    public String getTempPrice() {
+        return tempPrice;
+    }
+
+    public void setTempPrice(String tempPrice) {
+        this.tempPrice = tempPrice;
+    }
 
     public String getImageUrl() {
         return imageUrl;

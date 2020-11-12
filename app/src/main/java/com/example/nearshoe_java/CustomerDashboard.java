@@ -83,6 +83,17 @@ public class CustomerDashboard extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            redirectToLogin();
+        } else {
+            getUserDetails(currentUser);
+        }
+    }
+
     private void getUserDetails(FirebaseUser currentUser) {
         DBUtilClass.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -96,6 +107,15 @@ public class CustomerDashboard extends AppCompatActivity implements View.OnClick
                 userMC.setPhone(snapshot.child("phone").getValue(String.class));
                 userMC.setUserType(snapshot.child("userType").getValue(String.class));
                 userMC.setImage(snapshot.child("image").getValue(String.class));
+
+                if (userMC != null) {
+                    tvWelcome.setText(userMC.getName());
+                    if (!userMC.getImage().equals("")) {
+                        Glide.with(CustomerDashboard.this).load(userMC.getImage()).into(profileImage);
+                    } else {
+                        Glide.with(CustomerDashboard.this).load(R.drawable.ic_camera).into(profileImage);
+                    }
+                }
             }
 
             @Override
