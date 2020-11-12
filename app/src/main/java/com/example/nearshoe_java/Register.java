@@ -21,7 +21,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import static com.example.nearshoe_java.Utilities.DB_USERS_REF;
+import static com.example.nearshoe_java.DBUtilClass.DB_USERS_REF;
 
 public class Register extends AppCompatActivity {
 

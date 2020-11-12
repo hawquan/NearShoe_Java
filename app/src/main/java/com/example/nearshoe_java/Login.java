@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.nearshoe_java.ModelClasses.UserMC;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -127,8 +126,8 @@ public class Login extends AppCompatActivity {
     }
 
     private void getUserDetails(FirebaseUser currentUser) {
-        Log.i("Login", "" + Utilities.DB_USERS_REF.child(currentUser.getUid()));
-        Utilities.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.i("Login", "" + DBUtilClass.DB_USERS_REF.child(currentUser.getUid()));
+        DBUtilClass.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Intent intent = null;

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F7F7"
+    tools:context=".ProductCrud">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView_product_id"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="#F7F7F7"
+            android:src="@drawable/ic_camera"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <EditText
+                android:id="@+id/et_productName_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Product Name"
+                android:inputType="textPersonName"
+                android:text="" />
+
+            <EditText
+                android:id="@+id/et_productDesc_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:hint="Product Description"
+                android:inputType="textMultiLine"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:text="" />
+
+            <EditText
+                android:id="@+id/et_productPrice_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Product Amount"
+                android:inputType="number" />
+
+            <RadioGroup
+                android:id="@+id/availableStatusRG_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/availableRB_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Available" />
+
+                <RadioButton
+                    android:id="@+id/un_availableRB_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Not Available" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btnProductSave_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

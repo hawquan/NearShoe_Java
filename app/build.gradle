@@ -12,7 +12,7 @@ android {
         minSdkVersion 25
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,7 +54,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
+    implementation 'com.firebaseui:firebase-ui-database:6.2.1'
     //Glide Library
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //AnstronCoreHelper
+    implementation 'com.github.abhidiwakar:AnstronCoreHelper:1.1'
+    //SiliCompressor
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.4'
+
+
 }

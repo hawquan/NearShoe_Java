@@ -89,7 +89,7 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
     }
 
     private void getUserDetails(FirebaseUser currentUser) {
-        Utilities.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        DBUtilClass.DB_USERS_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userMC = new UserMC();

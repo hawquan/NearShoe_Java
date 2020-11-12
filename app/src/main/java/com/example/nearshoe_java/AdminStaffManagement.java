@@ -13,7 +13,7 @@ public class AdminStaffManagement extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_staff_manahement);
+        setContentView(R.layout.activity_staff_management);
         mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
     }
