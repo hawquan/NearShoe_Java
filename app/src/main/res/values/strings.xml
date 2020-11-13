@@ -45,6 +45,8 @@
     <string name="name">Name</string>
     <string name="emailaddress">EmailAddress</string>
     <string name="password">Password</string>
+    <string name="about_text">Version 1.0 </string>
+    <string name="about_As">The NeatShoe application is designed for the sneaker lover to use. The main purpose of NeatShoe is sneaker cleaning services and product to purchase.</string>
 
     <string-array name="quantity_string_array">
         <item>1</item>

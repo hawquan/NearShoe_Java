@@ -24,9 +24,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 public class AdminUpdateServiceStatus extends AppCompatActivity {
+    public static final DatabaseReference DB_ORDER_REF = FirebaseDatabase.getInstance().getReference().child("PickupAndDelivery");
 
     FirebaseAuth mAuth;
     ProgressDialog mProgressDialog;
@@ -70,6 +73,7 @@ public class AdminUpdateServiceStatus extends AppCompatActivity {
                 Log.i("FirebaseRecyclerAdapter", "onBindViewHolder");
                 holder.quantity_NameTV.setText(orderItemMC.getItems());
                 holder.statusTV.setText(orderItemMC.getStatus());
+                holder.userEmail.setText(orderItemMC.getCustomerName());
                 if (orderItemMC.getStatus().equals("Pending")) {
                     holder.statusTV.setTextColor(Color.BLUE);
                     holder.completedBtn.setVisibility(View.VISIBLE);
@@ -154,7 +158,7 @@ public class AdminUpdateServiceStatus extends AppCompatActivity {
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder {
         Button feedbackBtn, pickingUpBtn, deliveringBtn, cancelledBtn, completedBtn;
-        TextView quantity_NameTV, statusTV, amountTV;
+        TextView quantity_NameTV, statusTV, amountTV, userEmail;
         EditText editText;
         RatingBar ratingBar;
 
@@ -170,6 +174,7 @@ public class AdminUpdateServiceStatus extends AppCompatActivity {
             quantity_NameTV = v.findViewById(R.id.tv_quantityName_id);
             statusTV = v.findViewById(R.id.tv_serviceStatus_id);
             editText = v.findViewById(R.id.editTextFeedBack_id);
+            userEmail = v.findViewById(R.id.tv_userEmail);
             editText.setVisibility(View.GONE);
             feedbackBtn.setVisibility(View.GONE);
             ratingBar.setVisibility(View.GONE);

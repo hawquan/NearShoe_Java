@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".AdminDashboard">
+    tools:context=".StaffDashboard">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,39 +69,12 @@
 
         <Button
             android:textAllCaps="false"
-            android:id="@+id/btnStaffManagement_id"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/red_round_border"
-            android:text="Staff Management" />
-
-        <Button
-            android:textAllCaps="false"
-            android:id="@+id/btnProductManagement_id"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/red_round_border"
-            android:text="Product Management" />
-
-        <Button
-            android:textAllCaps="false"
             android:id="@+id/btnAdminViewCustFeedback_id"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/red_round_border"
             android:text="View Customer Feedback" />
-
-        <Button
-            android:textAllCaps="false"
-            android:id="@+id/btnAdminViewReports_id"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/red_round_border"
-            android:text="View Reports" />
 
         <Button
             android:id="@+id/btnAdminLogout_id"

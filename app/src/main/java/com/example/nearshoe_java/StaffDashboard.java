@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdminDashboard extends AppCompatActivity implements View.OnClickListener {
+public class StaffDashboard extends AppCompatActivity implements View.OnClickListener {
 
     TextView welcome;
     Intent getDataIntent;
@@ -33,7 +33,7 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_dashboard);
+        setContentView(R.layout.activity_staff_dashboard);
         mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
         getDataIntent = getIntent();
@@ -42,9 +42,9 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
         if (userMC != null) {
             welcome.setText(userMC.getName());
             if (!userMC.getImage().equals("")) {
-                Glide.with(AdminDashboard.this).load(userMC.getImage()).into(profileImage);
+                Glide.with(StaffDashboard.this).load(userMC.getImage()).into(profileImage);
             } else {
-                Glide.with(AdminDashboard.this).load(R.drawable.ic_camera).into(profileImage);
+                Glide.with(StaffDashboard.this).load(R.drawable.ic_camera).into(profileImage);
             }
         }
 
@@ -54,21 +54,15 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btnAdminProfile_id) {
-            Intent intent = new Intent(AdminDashboard.this, Profile.class);
+            Intent intent = new Intent(StaffDashboard.this, Profile.class);
             intent.putExtra("UserMC", userMC);
             startActivity(intent);
         } else if (id == R.id.btnAdminLogout_id) {
             signOutUser();
         } else if (id == R.id.btnAdminServiceStatus_id) {
-            startActivity(new Intent(AdminDashboard.this, AdminUpdateServiceStatus.class));
-        } else if (id == R.id.btnStaffManagement_id) {
-            startActivity(new Intent(AdminDashboard.this, AdminStaffManagement.class));
-        } else if (id == R.id.btnProductManagement_id) {
-            startActivity(new Intent(AdminDashboard.this, AdminProductManagement.class));
-        } else if (id == R.id.btnAdminViewReports_id) {
-            startActivity(new Intent(AdminDashboard.this, AdminViewReports.class));
+            startActivity(new Intent(StaffDashboard.this, AdminUpdateServiceStatus.class));
         } else if (id == R.id.btnAdminViewCustFeedback_id) {
-            startActivity(new Intent(AdminDashboard.this, AdminViewFeedback.class));
+            startActivity(new Intent(StaffDashboard.this, AdminViewFeedback.class));
         }
     }
 
@@ -84,7 +78,7 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
     }
 
     private void redirectToLogin() {
-        startActivity(new Intent(AdminDashboard.this, Login.class));
+        startActivity(new Intent(StaffDashboard.this, Login.class));
         finish();
     }
 
@@ -105,9 +99,9 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
                 if (userMC != null) {
                     welcome.setText(userMC.getName());
                     if (!userMC.getImage().equals("")) {
-                        Glide.with(AdminDashboard.this).load(userMC.getImage()).into(profileImage);
+                        Glide.with(StaffDashboard.this).load(userMC.getImage()).into(profileImage);
                     } else {
-                        Glide.with(AdminDashboard.this).load(R.drawable.ic_camera).into(profileImage);
+                        Glide.with(StaffDashboard.this).load(R.drawable.ic_camera).into(profileImage);
                     }
                 }
             }
@@ -121,7 +115,7 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
 
     private void signOutUser() {
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(AdminDashboard.this, Login.class));
+        startActivity(new Intent(StaffDashboard.this, Login.class));
         Toast.makeText(this, "User Logged Out Successfully!!!", Toast.LENGTH_SHORT).show();
         finish();
     }
@@ -137,15 +131,11 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
         btnLogout = findViewById(R.id.btnAdminLogout_id);
         btnProfile = findViewById(R.id.btnAdminProfile_id);
         btnUpdateServiceStatus = findViewById(R.id.btnAdminServiceStatus_id);
-        btnStaffManagement = findViewById(R.id.btnStaffManagement_id);
         btnProductManagement = findViewById(R.id.btnProductManagement_id);
         btnViewReports = findViewById(R.id.btnAdminViewReports_id);
         btnCustomerFeedback = findViewById(R.id.btnAdminViewCustFeedback_id);
         btnProfile.setOnClickListener(this);
-        btnProductManagement.setOnClickListener(this);
-        btnStaffManagement.setOnClickListener(this);
         btnUpdateServiceStatus.setOnClickListener(this);
-        btnViewReports.setOnClickListener(this);
         btnCustomerFeedback.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
     }

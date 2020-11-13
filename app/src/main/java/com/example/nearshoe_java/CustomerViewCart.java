@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +28,10 @@ import com.example.nearshoe_java.ModelClasses.CartItemMC;
 import com.example.nearshoe_java.ModelClasses.OrderItemMC;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -34,6 +42,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class CustomerViewCart extends AppCompatActivity {
@@ -43,6 +55,9 @@ public class CustomerViewCart extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     RecyclerView mRecyclerView;
     FirebaseUser currentUser;
+    ImageButton pickLocation;
+    EditText currentAddress;
+    String getAddress;
     double totalPrice;
     TextView totalAmountTV;
     private LinearLayoutManager linearLayoutManager;
@@ -58,9 +73,10 @@ public class CustomerViewCart extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(CustomerViewCart.this);
         mProgressDialog.setTitle("Order");
         mProgressDialog.setMessage("Placing order, please wait!!!");
-
+        currentAddress = findViewById(R.id.deliveryLocation);
         btnPlaceOrder = findViewById(R.id.placeOrderBtn_id);
         totalAmountTV = findViewById(R.id.totalAmountTV_id);
+        pickLocation = findViewById(R.id.btPickLocation);
         mRecyclerView = findViewById(R.id.view_cart_recycler_view_id);
         linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -68,11 +84,31 @@ public class CustomerViewCart extends AppCompatActivity {
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                if (validate()){
+                    placeOrder();
+                }
+
             }
         });
+
+
+        pickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlacePicker();
+            }
+        });
+
         getCartItems();
     }
+    private boolean validate(){
+        if(currentAddress.getText().toString().isEmpty()){
+            currentAddress.setError("Address is required.");
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -186,7 +222,6 @@ public class CustomerViewCart extends AppCompatActivity {
     }
 
     private void placeOrder() {
-
         mProgressDialog.show();
         DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -195,37 +230,37 @@ public class CustomerViewCart extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         items += "(" + ds.child("quantity").getValue(String.class) + ")" + ds.child("itemName").getValue(String.class) + " ";
+                        String currentUserId = mAuth.getCurrentUser().getUid();
+                        String uniqueId = DBUtilClass.DB_ORDER_REF.child(currentUserId).push().getKey();
+
+                        OrderItemMC orderItemMC = new OrderItemMC();
+                        orderItemMC.setOrderId(uniqueId);
+                        orderItemMC.setAmount(totalAmountTV.getText().toString());
+                        orderItemMC.setCustomerId(currentUserId);
+                        orderItemMC.setStatus("Pending");
+                        orderItemMC.setItems(items);
+                        orderItemMC.setAddress(getAddress);
+                        orderItemMC.setFeedback("");
+                        orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
+                        orderItemMC.setRating("");
+
+
+                        DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                mProgressDialog.dismiss();
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(CustomerViewCart.this, CustomerDashboard.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(i);
+                                } else {
+                                    Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
                 }
-                String currentUserId = mAuth.getCurrentUser().getUid();
-                String uniqueId = DBUtilClass.DB_ORDER_REF.child(currentUserId).push().getKey();
-
-                OrderItemMC orderItemMC = new OrderItemMC();
-                orderItemMC.setOrderId(uniqueId);
-                orderItemMC.setAmount(totalAmountTV.getText().toString());
-                orderItemMC.setCustomerId(currentUserId);
-                orderItemMC.setStatus("Pending");
-                orderItemMC.setItems(items);
-                orderItemMC.setFeedback("");
-                orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
-                orderItemMC.setRating("");
-
-                DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        mProgressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), CustomerDashboard.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra("EXIT", true);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-
-                    }
-                });
 
             }
 
@@ -234,6 +269,46 @@ public class CustomerViewCart extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void openPlacePicker() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final static int PLACE_PICKER_REQUEST = 999;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PLACE_PICKER_REQUEST:
+                    Place place = PlacePicker.getPlace(this, data);
+                    double latitude = place.getLatLng().latitude;
+                    double longitude = place.getLatLng().longitude;
+
+                    Geocoder geocoder;
+                    List<Address> addresses = null;
+                    geocoder = new Geocoder(this, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        String address = addresses.get(0).getAddressLine(0);
+                        currentAddress.setText(address);
+                        getAddress = address.trim();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
     }
 
 

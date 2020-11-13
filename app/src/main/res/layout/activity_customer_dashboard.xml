@@ -51,40 +51,56 @@
         <Button
             android:id="@+id/btnProfile_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_green_light"
+            android:layout_height="60dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Profile" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnServiceStatus_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_blue_bright"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="ServiceStatus" />
 
         <Button
+
+            android:textAllCaps="false"
             android:id="@+id/btnProducts_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_green_dark"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Products" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnNeedService_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_orange_light"
-            android:text="Need up of our Pick-up and Delivery Services?" />
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
+            android:text="Shoe Cleaning Service" />
 
         <Button
+            android:textAllCaps="false"
+            android:id="@+id/btnAboutAs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
+            android:text="About As" />
+
+        <Button
+            android:textAllCaps="false"
             android:id="@+id/btnLogout_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
+            android:background="@drawable/red_round_border"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
             android:text="Logout" />
     </LinearLayout>
 </ScrollView>

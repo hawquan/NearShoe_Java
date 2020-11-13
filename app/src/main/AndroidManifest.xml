@@ -11,7 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NearShoe_Java">
-        <activity android:name=".AddAdmin"></activity>
+        <activity
+            android:name=".StaffDashboard"
+            android:label="Staff Dashboard" />
+        <activity
+            android:name=".pickup2"
+            android:label="Pick up And Delivery" />
+        <activity
+            android:name=".AddAdmin"
+            android:label="Add Admin" />
+        <activity
+            android:name=".AboutUs"
+            android:label="About Us" />
+
         <activity
             android:name=".CustomerViewCart"
             android:label="Cart Items" />
