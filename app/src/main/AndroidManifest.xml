@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NearShoe_Java">
-        <activity android:name=".pickup2"></activity>
+        <activity android:name=".StaffDashboard"
+            android:label="Staff Dashboard"/>
+        <activity android:name=".pickup2" />
         <activity android:name=".AddAdmin" />
         <activity android:name=".AboutUs"></activity>
 
