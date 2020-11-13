@@ -7,6 +7,7 @@ public class OrderItemMC {
     String amount;
     String items;
     String feedback;
+    String address;
 
     public String getCustomerName() {
         return customerName;
@@ -22,6 +23,14 @@ public class OrderItemMC {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public void setAddress(String address){
+        this.address = address;
+    }
+
+    public String getAddress(String address){
+        return address;
     }
 
     String customerName;

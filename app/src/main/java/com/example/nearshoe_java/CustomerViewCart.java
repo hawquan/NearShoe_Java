@@ -24,6 +24,7 @@ import com.example.nearshoe_java.ModelClasses.CartItemMC;
 import com.example.nearshoe_java.ModelClasses.OrderItemMC;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -207,6 +208,7 @@ public class CustomerViewCart extends AppCompatActivity {
                         orderItemMC.setFeedback("");
                         orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
                         orderItemMC.setRating("");
+                    //    orderItemMC.setAddress();
 
                         DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -214,10 +216,9 @@ public class CustomerViewCart extends AppCompatActivity {
                                 mProgressDialog.dismiss();
                                 if (task.isSuccessful()) {
                                     Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), CustomerDashboard.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.putExtra("EXIT", true);
-                                    startActivity(intent);
+                                    Intent i = new Intent(CustomerViewCart.this, CustomerDashboard.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(i);
                                 } else {
                                     Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }

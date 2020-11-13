@@ -149,7 +149,7 @@ public class CustomerDashboard extends AppCompatActivity implements View.OnClick
         } else if (id == R.id.btnProducts_id) {
             startActivity(new Intent(CustomerDashboard.this, CustomerProducts.class));
         } else if (id == R.id.btnNeedService_id) {
-            startActivity(new Intent(CustomerDashboard.this, CustomerNeedService.class));
+            startActivity(new Intent(CustomerDashboard.this, pickup2.class));
         } else if (id == R.id.btnLogout_id) {
             signOutUser();
         }else if(id == R.id.btnAboutAs){
