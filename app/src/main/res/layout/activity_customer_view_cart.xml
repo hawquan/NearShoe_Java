@@ -33,6 +33,24 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/deliveryLocation"
+            android:layout_width="218dp"
+            android:layout_height="51dp"
+            android:layout_marginBottom="4dp"
+            android:ems="10"
+            android:hint="Address"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/btPickLocation"
+            app:layout_constraintStart_toStartOf="@+id/textView12" />
+
+        <ImageButton
+            android:id="@+id/btPickLocation"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:src="@android:drawable/ic_menu_mylocation" />
+
         <Button
             android:id="@+id/placeOrderBtn_id"
             android:layout_width="match_parent"

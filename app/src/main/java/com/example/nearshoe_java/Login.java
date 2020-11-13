@@ -145,7 +145,8 @@ public class Login extends AppCompatActivity {
                     intent = new Intent(Login.this, AdminDashboard.class);
                 } else if (userMC.getUserType().equals("Customer")) {
                     intent = new Intent(Login.this, CustomerDashboard.class);
-
+                } else if (userMC.getUserType().equals("Staff")) {
+                    intent = new Intent(Login.this, StaffDashboard.class);
                 } else {
                     // He is Staff Person and do its navigation here...
                     //intent = new Intent(Login.this, StaffDashboard.class);

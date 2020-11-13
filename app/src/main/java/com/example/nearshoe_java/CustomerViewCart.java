@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +27,9 @@ import com.example.nearshoe_java.ModelClasses.CartItemMC;
 import com.example.nearshoe_java.ModelClasses.OrderItemMC;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +41,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
 public class CustomerViewCart extends AppCompatActivity {
@@ -44,6 +54,8 @@ public class CustomerViewCart extends AppCompatActivity {
     ProgressDialog mProgressDialog;
     RecyclerView mRecyclerView;
     FirebaseUser currentUser;
+    ImageButton pickLocation;
+    TextView currentAddress;
     double totalPrice;
     TextView totalAmountTV;
     private LinearLayoutManager linearLayoutManager;
@@ -59,9 +71,10 @@ public class CustomerViewCart extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(CustomerViewCart.this);
         mProgressDialog.setTitle("Order");
         mProgressDialog.setMessage("Placing order, please wait!!!");
-
+        currentAddress = findViewById(R.id.deliveryLocation);
         btnPlaceOrder = findViewById(R.id.placeOrderBtn_id);
         totalAmountTV = findViewById(R.id.totalAmountTV_id);
+        pickLocation = findViewById(R.id.btPickLocation);
         mRecyclerView = findViewById(R.id.view_cart_recycler_view_id);
         linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -72,8 +85,25 @@ public class CustomerViewCart extends AppCompatActivity {
                 placeOrder();
             }
         });
+
+
+        pickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPlacePicker();
+            }
+        });
+
         getCartItems();
     }
+    private boolean validate(){
+        if(currentAddress.getText().toString().isEmpty()){
+            currentAddress.setError("");
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -208,7 +238,7 @@ public class CustomerViewCart extends AppCompatActivity {
                         orderItemMC.setFeedback("");
                         orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
                         orderItemMC.setRating("");
-                    //    orderItemMC.setAddress();
+                        //    orderItemMC.setAddress();
 
                         DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -235,6 +265,45 @@ public class CustomerViewCart extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void openPlacePicker() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final static int PLACE_PICKER_REQUEST = 999;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PLACE_PICKER_REQUEST:
+                    Place place = PlacePicker.getPlace(this, data);
+                    double latitude = place.getLatLng().latitude;
+                    double longitude = place.getLatLng().longitude;
+
+                    Geocoder geocoder;
+                    List<Address> addresses = null;
+                    geocoder = new Geocoder(this, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        String address = addresses.get(0).getAddressLine(0);
+                        currentAddress.setText(address);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
     }
 
 

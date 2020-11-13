@@ -30,7 +30,7 @@ public class AddAdmin extends AppCompatActivity {
     RadioButton customerRadioButton, adminRadioButton;*/
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     FirebaseAuth mAuth;
-    String userType = "Admin";
+    String userType = "Staff";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class AddAdmin extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(AddAdmin.this, "User created and saved Successfully!!!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddAdmin.this, "New staff created and saved Successfully!!!", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                                 finish();
                                 Log.i("RegisterActivity", "User created and saved Successfully!!!");
