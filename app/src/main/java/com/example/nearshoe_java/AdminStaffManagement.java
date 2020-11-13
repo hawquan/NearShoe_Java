@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,7 +64,7 @@ public class AdminStaffManagement extends AppCompatActivity {
     }
 
     private void addAdmin() {
-        Toast.makeText(this, "Add Admin", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(AdminStaffManagement.this,AddAdmin.class));
     }
 
     @Override

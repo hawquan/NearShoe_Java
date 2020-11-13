@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NearShoe_Java">
+        <activity android:name=".AddAdmin"></activity>
         <activity
             android:name=".CustomerViewCart"
             android:label="Cart Items" />

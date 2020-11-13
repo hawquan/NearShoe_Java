@@ -42,6 +42,9 @@
     <string name="todo">TODO</string>
     <string name="productname">ProductName</string>
     <string name="price">Price</string>
+    <string name="name">Name</string>
+    <string name="emailaddress">EmailAddress</string>
+    <string name="password">Password</string>
 
     <string-array name="quantity_string_array">
         <item>1</item>
