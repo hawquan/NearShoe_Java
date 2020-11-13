@@ -73,7 +73,7 @@ public class AdminStaffManagement extends AppCompatActivity {
     }
 
     private void getData() {
-        Query mPostsRef = DBUtilClass.DB_USERS_REF.orderByChild("userType").equalTo("Staff");
+        Query mPostsRef = DBUtilClass.DB_USERS_REF;
         Log.i("FirebaseRecyclerAdapter", "gettingPosts");
         FirebaseRecyclerOptions<UserMC> options = new FirebaseRecyclerOptions.Builder<UserMC>()
                 .setQuery(mPostsRef, UserMC.class).build();

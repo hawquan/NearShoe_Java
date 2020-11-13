@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -55,7 +56,8 @@ public class CustomerViewCart extends AppCompatActivity {
     RecyclerView mRecyclerView;
     FirebaseUser currentUser;
     ImageButton pickLocation;
-    TextView currentAddress;
+    EditText currentAddress;
+    String getAddress;
     double totalPrice;
     TextView totalAmountTV;
     private LinearLayoutManager linearLayoutManager;
@@ -220,7 +222,6 @@ public class CustomerViewCart extends AppCompatActivity {
     }
 
     private void placeOrder() {
-
         mProgressDialog.show();
         DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -238,11 +239,11 @@ public class CustomerViewCart extends AppCompatActivity {
                         orderItemMC.setCustomerId(currentUserId);
                         orderItemMC.setStatus("Pending");
                         orderItemMC.setItems(items);
-                        orderItemMC.setAddress(currentAddress.getText().toString());
+                        orderItemMC.setAddress(getAddress);
                         orderItemMC.setFeedback("");
                         orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
                         orderItemMC.setRating("");
-                        //    orderItemMC.setAddress();
+
 
                         DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -256,7 +257,6 @@ public class CustomerViewCart extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
-
                             }
                         });
                     }
@@ -303,6 +303,7 @@ public class CustomerViewCart extends AppCompatActivity {
                         addresses = geocoder.getFromLocation(latitude, longitude, 1);
                         String address = addresses.get(0).getAddressLine(0);
                         currentAddress.setText(address);
+                        getAddress = address.trim();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

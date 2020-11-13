@@ -33,7 +33,7 @@ public class StaffDashboard extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_dashboard);
+        setContentView(R.layout.activity_staff_dashboard);
         mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
         getDataIntent = getIntent();
