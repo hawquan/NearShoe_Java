@@ -50,58 +50,66 @@
         </LinearLayout>
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnAdminProfile_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_green_light"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Your Profile" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnAdminServiceStatus_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_blue_bright"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Update Service Status" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnStaffManagement_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_green_dark"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Staff Management" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnProductManagement_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_orange_light"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="Product Management" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnAdminViewCustFeedback_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_orange_light"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="View Customer Feedback" />
 
         <Button
+            android:textAllCaps="false"
             android:id="@+id/btnAdminViewReports_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
-            android:background="@android:color/holo_orange_light"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/red_round_border"
             android:text="View Reports" />
 
         <Button
             android:id="@+id/btnAdminLogout_id"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="4dp"
+            android:background="@drawable/red_round_border"
+            android:textAllCaps="false"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
             android:text="Logout" />
     </LinearLayout>
 </ScrollView>

@@ -94,7 +94,7 @@ public class CustomerProducts extends AppCompatActivity {
                 Log.i("FirebaseRecyclerAdapter", "onBindViewHolder");
                 holder.name.setText(myPost.getName());
                 holder.desc.setText(myPost.getDescription());
-                holder.amount.setText("Price:" + myPost.getPrice());
+                holder.amount.setText("Price: RM " + myPost.getPrice());
                 Log.i("FirebaseRecyclerAdapter", "Available:" + myPost.getIsAvailable());
                 if (myPost.getIsAvailable().equals("Available")) {
                     holder.available.setText("Available");

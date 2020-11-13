@@ -210,10 +210,10 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
-                            mProgressDialog.show();
                             photoURL = task.getResult().toString();
                             Log.i("URL", photoURL);
                             DB_USERS_REF.child(mAuth.getCurrentUser().getUid()).child("image").setValue(photoURL);
+                            mProgressDialog.dismiss();
                         }
                     }
                 });

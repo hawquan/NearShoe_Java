@@ -101,6 +101,15 @@ public class AdminDashboard extends AppCompatActivity implements View.OnClickLis
                 userMC.setPhone(snapshot.child("phone").getValue(String.class));
                 userMC.setUserType(snapshot.child("userType").getValue(String.class));
                 userMC.setImage(snapshot.child("image").getValue(String.class));
+
+                if (userMC != null) {
+                    welcome.setText(userMC.getName());
+                    if (!userMC.getImage().equals("")) {
+                        Glide.with(AdminDashboard.this).load(userMC.getImage()).into(profileImage);
+                    } else {
+                        Glide.with(AdminDashboard.this).load(R.drawable.ic_camera).into(profileImage);
+                    }
+                }
             }
 
             @Override
