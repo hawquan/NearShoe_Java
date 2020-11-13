@@ -75,6 +75,8 @@ class pickup2 : AppCompatActivity() {
         var amount = 0
         txtSelectDate.isEnabled=false
         txtSelectTime.isEnabled=false
+        txtDeliverySelectDate.isEnabled=false
+        txtDeliverySelectTime.isEnabled=false
         totalFee.isEnabled=false
 
         val options = arrayOf("1", "2", "3", "4", "5")
@@ -188,6 +190,15 @@ class pickup2 : AppCompatActivity() {
 
     private fun validate():Boolean{
 
+        if(txtSelectDate.text.toString().isEmpty()&&txtSelectTime.text.toString().isEmpty()&&txtDeliverySelectTime.text.toString().isEmpty()&&txtDeliverySelectDate.text.toString().isEmpty()&&currentAddress.text.toString().isEmpty()&&deliveryAddress.text.toString().isEmpty()){
+            txtSelectDate.error="Please select a pickup date"
+            txtSelectTime.error="Please select a pickup time"
+            txtDeliverySelectTime.error="Please select a delivery time"
+            txtDeliverySelectDate.error="Please select a delivery Date"
+            currentAddress.error = "Please enter address"
+            deliveryAddress.error = "Please enter select delivery address"
+            return false
+        }
 
 
 
