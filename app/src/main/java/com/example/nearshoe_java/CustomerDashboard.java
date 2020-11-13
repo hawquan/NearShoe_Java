@@ -24,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CustomerDashboard extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseAuth mAuth;
-    Button btnLogout, btnProfile, btnAvailServices, btnServiceStatus, btnProducts;
+    Button btnLogout, btnProfile, btnAvailServices, btnServiceStatus, btnProducts, btnAboutAs;
     TextView tvWelcome;
     UserMC userMC;
     CircleImageView profileImage;
@@ -57,12 +57,14 @@ public class CustomerDashboard extends AppCompatActivity implements View.OnClick
         btnProducts = findViewById(R.id.btnProducts_id);
         btnAvailServices = findViewById(R.id.btnNeedService_id);
         btnLogout = findViewById(R.id.btnLogout_id);
+        btnAboutAs = findViewById(R.id.btnAboutAs);
 
         btnLogout.setOnClickListener(this);
         btnProfile.setOnClickListener(this);
         btnAvailServices.setOnClickListener(this);
         btnServiceStatus.setOnClickListener(this);
         btnProducts.setOnClickListener(this);
+        btnAboutAs.setOnClickListener(this);
     }
 
     private void signOutUser() {
@@ -150,6 +152,8 @@ public class CustomerDashboard extends AppCompatActivity implements View.OnClick
             startActivity(new Intent(CustomerDashboard.this, pickup2.class));
         } else if (id == R.id.btnLogout_id) {
             signOutUser();
+        }else if(id == R.id.btnAboutAs){
+            startActivity(new Intent(CustomerDashboard.this,AboutUs.class));
         }
     }
 }

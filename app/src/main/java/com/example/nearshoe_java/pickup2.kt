@@ -34,14 +34,18 @@ class pickup2 : AppCompatActivity() {
     lateinit var txtDeliverySelectTime : EditText
     lateinit var totalFee : EditText
     lateinit var currentAddress : EditText
+    lateinit var deliveryAddress : EditText
     lateinit var btlocation : ImageButton
     lateinit var btSelectDate : Button
     lateinit var btSelectTime : Button
     lateinit var btDelSelectDate : Button
     lateinit var btDelSelectTime : Button
     lateinit var btCompleteOrder : Button
+    lateinit var btDeliveryLocation :ImageButton
 
     private val PLACE_PICKER_REQUEST = 999
+
+    private val PLACE_DELIVERY_REQUEST = 888
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,7 @@ class pickup2 : AppCompatActivity() {
         option= findViewById<View>(R.id.spinner2) as Spinner
         totalFee=findViewById<View>(R.id.totalFee) as EditText
         currentAddress =findViewById<View>(R.id.pickupLocation) as EditText
+        deliveryAddress =findViewById<View>(R.id.deliveryLocation) as EditText
         btlocation =findViewById<View>(R.id.btPickLocation) as ImageButton
         btSelectDate =findViewById<View>(R.id.btSelectDate) as Button
         btSelectTime =findViewById<View>(R.id.btSelectTime) as Button
@@ -60,6 +65,8 @@ class pickup2 : AppCompatActivity() {
         btDelSelectDate=findViewById<View>(R.id.btDeliveryDate) as Button
         btDelSelectTime=findViewById<View>(R.id.btDeliveryTime) as Button
         btCompleteOrder=  findViewById<View>(R.id.btCompletePickup) as Button
+        btDeliveryLocation= findViewById<View>(R.id.btDeliveryLocation)as ImageButton
+
         mAuth = FirebaseAuth.getInstance();
         val c = Calendar.getInstance()
         val year =c.get(Calendar.YEAR)
@@ -90,6 +97,9 @@ class pickup2 : AppCompatActivity() {
         btlocation.setOnClickListener {
             openPlacePicker()
         }
+        btDeliveryLocation.setOnClickListener {
+            openPlacePicker2()
+        }
 
 
         btCompleteOrder.setOnClickListener {
@@ -99,11 +109,13 @@ class pickup2 : AppCompatActivity() {
                 map["userId"]=mAuth.currentUser!!.uid
                 map["sneakerAmount"]=amount
                 map["address"]=currentAddress.text.toString().trim()
+                map["Delivery address"]=deliveryAddress.text.toString().trim()
                 map["pickupDate"]=txtSelectDate.text.toString().trim()
                 map["pickupTime"]=txtSelectTime.text.toString().trim()
                 map["deliveryDate"]=txtDeliverySelectDate.text.toString().trim()
                 map["deliveryTime"]=txtDeliverySelectTime.text.toString().trim()
                 map["totalFee"]= totalFee.text.toString().trim()
+
 
                 FirebaseDatabase.getInstance().reference
                         .child("PickupAndDelivery").push()
@@ -196,7 +208,11 @@ class pickup2 : AppCompatActivity() {
             return false
         }
         if(currentAddress.text.toString().isEmpty()){
-            currentAddress.error = "Please enter address"
+            currentAddress.error = "Please enter select pickup address"
+            return false
+        }
+        if(deliveryAddress.text.toString().isEmpty()){
+            deliveryAddress.error = "Please enter select delivery address"
             return false
         }
         return true
@@ -206,6 +222,21 @@ class pickup2 : AppCompatActivity() {
 
         try {
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST)
+
+        } catch (e: GooglePlayServicesRepairableException) {
+            Log.d("Exception", e.message!!)
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            Log.d("Exception", e.message!!)
+            e.printStackTrace()
+        }
+    }
+
+    private fun openPlacePicker2() {
+        val builder = PlacePicker.IntentBuilder()
+
+        try {
+            startActivityForResult(builder.build(this), PLACE_DELIVERY_REQUEST)
 
         } catch (e: GooglePlayServicesRepairableException) {
             Log.d("Exception", e.message!!)
@@ -235,7 +266,24 @@ class pickup2 : AppCompatActivity() {
                     val address = addresses[0].getAddressLine(0)
                     currentAddress.setText(address)
                 }
+                PLACE_DELIVERY_REQUEST -> {
+                    val place1 = PlacePicker.getPlace(this, data)
+                    val latitude1 = place1.latLng.latitude
+                    val longitude1 = place1.latLng.longitude
+
+
+                    val geocoder: Geocoder
+                    val addresses: List<Address>
+                    geocoder = Geocoder(this, Locale.getDefault())
+
+                    addresses = geocoder.getFromLocation(latitude1, longitude1, 1)
+
+                    val address1 = addresses[0].getAddressLine(0)
+                    deliveryAddress.setText(address1)
+                }
             }
         }
     }
+
+
 }
