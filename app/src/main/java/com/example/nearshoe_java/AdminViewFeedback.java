@@ -60,7 +60,7 @@ public class AdminViewFeedback extends AppCompatActivity {
 
 
     private void getPosts() {
-        Query mPostsRef = DBUtilClass.DB_ORDER_REF;
+        Query mPostsRef = DBUtilClass.DB_ORDER_REF.orderByChild("feedback").equalTo("");
         Log.i("FirebaseRecyclerAdapter", "gettingPosts");
         FirebaseRecyclerOptions<OrderItemMC> options = new FirebaseRecyclerOptions.Builder<OrderItemMC>()
                 .setQuery(mPostsRef, OrderItemMC.class).build();
@@ -68,9 +68,11 @@ public class AdminViewFeedback extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull final AdminViewFeedback.PostsViewHolder holder, int position, @NonNull final OrderItemMC orderItemMC) {
                 Log.i("FirebaseRecyclerAdapter", "onBindViewHolder");
-                holder.quantity_NameTV.setText(orderItemMC.getItems());
-                holder.feedBackTV.setText("Feedback: " + orderItemMC.getFeedback());
-                holder.ratingTV.setText("Ratings: " + orderItemMC.getRating() + "/5.0");
+                if (orderItemMC.getFeedback().isEmpty()) {
+                    holder.quantity_NameTV.setText(orderItemMC.getItems());
+                    holder.feedBackTV.setText("Feedback: " + orderItemMC.getFeedback());
+                    holder.ratingTV.setText("Ratings: " + orderItemMC.getRating() + "/5.0");
+                }
             }
 
             @Override

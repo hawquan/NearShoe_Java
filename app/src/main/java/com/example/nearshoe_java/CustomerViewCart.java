@@ -195,37 +195,37 @@ public class CustomerViewCart extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         items += "(" + ds.child("quantity").getValue(String.class) + ")" + ds.child("itemName").getValue(String.class) + " ";
-                        String currentUserId = mAuth.getCurrentUser().getUid();
-                        String uniqueId = DBUtilClass.DB_ORDER_REF.child(currentUserId).push().getKey();
-
-                        OrderItemMC orderItemMC = new OrderItemMC();
-                        orderItemMC.setOrderId(uniqueId);
-                        orderItemMC.setAmount(totalAmountTV.getText().toString());
-                        orderItemMC.setCustomerId(currentUserId);
-                        orderItemMC.setStatus("Pending");
-                        orderItemMC.setItems(items);
-                        orderItemMC.setFeedback("");
-                        orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
-                        orderItemMC.setRating("");
-
-                        DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                mProgressDialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), CustomerDashboard.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    intent.putExtra("EXIT", true);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                }
-
-                            }
-                        });
                     }
                 }
+                String currentUserId = mAuth.getCurrentUser().getUid();
+                String uniqueId = DBUtilClass.DB_ORDER_REF.child(currentUserId).push().getKey();
+
+                OrderItemMC orderItemMC = new OrderItemMC();
+                orderItemMC.setOrderId(uniqueId);
+                orderItemMC.setAmount(totalAmountTV.getText().toString());
+                orderItemMC.setCustomerId(currentUserId);
+                orderItemMC.setStatus("Pending");
+                orderItemMC.setItems(items);
+                orderItemMC.setFeedback("");
+                orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
+                orderItemMC.setRating("");
+
+                DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mProgressDialog.dismiss();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), CustomerDashboard.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("EXIT", true);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
 
             }
 
