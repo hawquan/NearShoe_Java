@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NearShoe_Java">
-        <activity android:name=".AddAdmin"></activity>
+        <activity android:name=".pickup2"></activity>
+        <activity android:name=".AddAdmin" />
         <activity
             android:name=".CustomerViewCart"
             android:label="Cart Items" />
@@ -54,6 +55,10 @@
         <activity
             android:name=".Register"
             android:label="Register"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
+        <activity
+            android:name=".Pickup"
+            android:label="Pick Up And Delivery"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
             android:name=".Login"
