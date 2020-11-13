@@ -82,7 +82,10 @@ public class CustomerViewCart extends AppCompatActivity {
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                if (validate()){
+                    placeOrder();
+                }
+
             }
         });
 
@@ -98,7 +101,7 @@ public class CustomerViewCart extends AppCompatActivity {
     }
     private boolean validate(){
         if(currentAddress.getText().toString().isEmpty()){
-            currentAddress.setError("");
+            currentAddress.setError("Address is required.");
             return false;
         }
         return true;
@@ -235,6 +238,7 @@ public class CustomerViewCart extends AppCompatActivity {
                         orderItemMC.setCustomerId(currentUserId);
                         orderItemMC.setStatus("Pending");
                         orderItemMC.setItems(items);
+                        orderItemMC.setAddress(currentAddress.getText().toString());
                         orderItemMC.setFeedback("");
                         orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
                         orderItemMC.setRating("");

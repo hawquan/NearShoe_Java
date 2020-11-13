@@ -25,11 +25,11 @@ public class OrderItemMC {
         this.rating = rating;
     }
 
-    public void setAddress(String address){
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public String getAddress(String address){
+    public String getAddress(String address) {
         return address;
     }
 
