@@ -82,7 +82,6 @@ public class AdminUpdateServiceStatus extends AppCompatActivity {
                     holder.cancelledBtn.setVisibility(View.GONE);
                     holder.deliveringBtn.setVisibility(View.GONE);
                     holder.pickingUpBtn.setVisibility(View.GONE);
-
                 } else if (orderItemMC.getStatus().equals("Cancelled")) {
                     holder.statusTV.setTextColor(Color.RED);
                     holder.completedBtn.setVisibility(View.GONE);
