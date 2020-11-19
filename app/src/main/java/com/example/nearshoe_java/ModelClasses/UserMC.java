@@ -25,6 +25,13 @@ public class UserMC implements Parcelable {
         this.image = image;
     }
 
+    public UserMC(String name, String email,String phone, String userType) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.userType = userType;
+    }
+
     public UserMC() {
 
     }

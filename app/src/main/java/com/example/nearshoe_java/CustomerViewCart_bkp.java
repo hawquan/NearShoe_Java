@@ -1,10 +1,5 @@
 package com.example.nearshoe_java;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
@@ -22,6 +17,11 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.nearshoe_java.ModelClasses.CartItemMC;
@@ -43,13 +43,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-public class CustomerViewCart extends AppCompatActivity {
+public class CustomerViewCart_bkp extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     Button btnPlaceOrder;
@@ -61,9 +60,8 @@ public class CustomerViewCart extends AppCompatActivity {
     String getAddress;
     double totalPrice;
     TextView totalAmountTV;
-    CartViewAdapter adapter;
-    List<CartItemMC> cartItemMCList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
+    private FirebaseRecyclerAdapter<CartItemMC, CustomerViewCart_bkp.PostsViewHolder> firebasePostAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +70,9 @@ public class CustomerViewCart extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         FirebaseApp.initializeApp(this);
-        adapter = new CartViewAdapter(this, cartItemMCList, mAuth, callback);
-
-        mProgressDialog = new ProgressDialog(CustomerViewCart.this);
+        mProgressDialog = new ProgressDialog(CustomerViewCart_bkp.this);
         mProgressDialog.setTitle("Order");
         mProgressDialog.setMessage("Placing order, please wait!!!");
-
         currentAddress = findViewById(R.id.deliveryLocation);
         btnPlaceOrder = findViewById(R.id.placeOrderBtn_id);
         totalAmountTV = findViewById(R.id.totalAmountTV_id);
@@ -86,15 +81,10 @@ public class CustomerViewCart extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(adapter);
-
-        getCartItemsFromRealTimeDatabase();
-
-
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validate()) {
+                if (validate()){
                     placeOrder();
                 }
 
@@ -109,31 +99,10 @@ public class CustomerViewCart extends AppCompatActivity {
             }
         });
 
-        //getCartItems();
+        getCartItems();
     }
-
-    private void getCartItemsFromRealTimeDatabase() {
-        DBUtilClass.DB_CART_REF.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        CartItemMC itemMC = ds.getValue(CartItemMC.class);
-                        cartItemMCList.add(itemMC);
-                    }
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private boolean validate() {
-        if (currentAddress.getText().toString().isEmpty()) {
+    private boolean validate(){
+        if(currentAddress.getText().toString().isEmpty()){
             currentAddress.setError("Address is required.");
             return false;
         }
@@ -143,11 +112,113 @@ public class CustomerViewCart extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(CustomerViewCart.this, CustomerDashboard.class);
+        Intent intent = new Intent(CustomerViewCart_bkp.this, CustomerDashboard.class);
         intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
+    private void getCartItems() {
+        Query mCartRef = DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid());
+        Log.i("CustomerViewCart", "gettingCartItems");
+        FirebaseRecyclerOptions<CartItemMC> options = new FirebaseRecyclerOptions.Builder<CartItemMC>()
+                .setQuery(mCartRef, CartItemMC.class).build();
+        firebasePostAdapter = new FirebaseRecyclerAdapter<CartItemMC, CustomerViewCart_bkp.PostsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull CustomerViewCart_bkp.PostsViewHolder holder, int position, @NonNull final CartItemMC cartItemMC) {
+                Log.i("CustomerViewCart", "onBindViewHolder");
+                holder.name.setText(cartItemMC.getItemName());
+                holder.price.setText(cartItemMC.getItemPrice());
+                Glide.with(getApplicationContext()).load(cartItemMC.getImageUrl()).into(holder.postImage);
+                holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String item = parent.getItemAtPosition(position).toString();
+                        int itemIntValue = Integer.parseInt(item);
+                        String price = String.valueOf(Integer.parseInt(cartItemMC.getItemPrice()) * itemIntValue);
+                        holder.price.setText(price);
+                        DBUtilClass.DB_CART_REF.child(currentUser.getUid()).child(cartItemMC.getId()).child("tempPrice").setValue(price);
+                        DBUtilClass.DB_CART_REF.child(currentUser.getUid()).child(cartItemMC.getId()).child("quantity").setValue(item);
+                        //calculateTotalPrice();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("CustomerViewCart", "Deleting:" + cartItemMC.getId());
+                        DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).child(cartItemMC.getId()).removeValue();
+                    }
+                });
+            }
+
+            @Override
+            public void onDataChanged() {
+                Log.i("CustomerViewCart", "onDataChanged");
+                super.onDataChanged();
+            }
+
+
+            @Override
+            public void onError(DatabaseError e) {
+                Log.i("CustomerViewCart", e.getMessage());
+                //Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+
+            @NonNull
+            @Override
+            public PostsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+                Log.i("CustomerViewCart", "onCreateViewHolder");
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_cart_row, viewGroup, false);
+                return new CustomerViewCart_bkp.PostsViewHolder(view);
+            }
+        };
+        mRecyclerView.setAdapter(firebasePostAdapter);
+        firebasePostAdapter.startListening();
+    }
+
+    private void calculateTotalPrice() {
+        Log.i("CustomerViewCart", "calculateTotalPrice called");
+        DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int ttl = 0;
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds != null) {
+                        ttl = ttl + Integer.parseInt(ds.child("tempPrice").getValue(String.class));
+                        Log.i("CustomerViewCart", ds.child("tempPrice").getValue(String.class) + "|" + ttl);
+                    }
+                }
+                totalAmountTV.setText("Total Bill is " + String.valueOf(ttl));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public class PostsViewHolder extends RecyclerView.ViewHolder {
+        ImageView postImage, deleteBtn;
+        TextView name, quantity, price;
+        Spinner spinner;
+
+        public PostsViewHolder(@NonNull View v) {
+            super(v);
+            spinner = v.findViewById(R.id.quantitySpinner);
+            name = v.findViewById(R.id.productNameTextView);
+            quantity = v.findViewById(R.id.textViewQTY);
+            price = v.findViewById(R.id.productTotalPriceTextView);
+            deleteBtn = v.findViewById(R.id.deleteProductButton);
+            postImage = v.findViewById(R.id.productImageView);
+        }
+    }
 
     private void placeOrder() {
         mProgressDialog.show();
@@ -178,12 +249,12 @@ public class CustomerViewCart extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 mProgressDialog.dismiss();
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(CustomerViewCart.this, CustomerDashboard.class);
+                                    Toast.makeText(CustomerViewCart_bkp.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(CustomerViewCart_bkp.this, CustomerDashboard.class);
                                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(i);
                                 } else {
-                                    Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CustomerViewCart_bkp.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -237,41 +308,6 @@ public class CustomerViewCart extends AppCompatActivity {
                     }
             }
         }
-    }
-
-    private CartViewAdapter.CallBack callback = new CartViewAdapter.CallBack() {
-        @Override
-        public void onItemClicked() {
-            Log.i("", "onItemClicked Called");
-            calculateTotalPrice();
-        }
-
-        @Override
-        public void onItemClickedWithPosition(String id, String action, int position) {
-
-        }
-    };
-
-    private void calculateTotalPrice() {
-        Log.i("CustomerViewCart", "calculateTotalPrice called");
-        DBUtilClass.DB_CART_REF.child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int ttl = 0;
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    if (ds != null) {
-                        ttl = ttl + Integer.parseInt(ds.child("tempPrice").getValue(String.class));
-                        Log.i("CustomerViewCart", ds.child("tempPrice").getValue(String.class) + "|" + ttl);
-                    }
-                }
-                totalAmountTV.setText("Total Bill is " + String.valueOf(ttl));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
 

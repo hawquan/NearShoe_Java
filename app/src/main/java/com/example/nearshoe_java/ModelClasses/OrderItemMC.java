@@ -9,6 +9,12 @@ public class OrderItemMC {
     String feedback;
     String address;
 
+    public OrderItemMC(String orderId,String items,String amount){
+        this.orderId=orderId;
+        this.items=items;
+        this.amount=amount;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
