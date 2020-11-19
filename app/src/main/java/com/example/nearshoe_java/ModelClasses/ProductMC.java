@@ -1,6 +1,31 @@
 package com.example.nearshoe_java.ModelClasses;
 
-public class ProductMC {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ProductMC implements Parcelable {
+    protected ProductMC(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        description = in.readString();
+        price = in.readString();
+        isAvailable = in.readString();
+        imageUrl = in.readString();
+        time = in.readString();
+    }
+
+    public static final Creator<ProductMC> CREATOR = new Creator<ProductMC>() {
+        @Override
+        public ProductMC createFromParcel(Parcel in) {
+            return new ProductMC(in);
+        }
+
+        @Override
+        public ProductMC[] newArray(int size) {
+            return new ProductMC[size];
+        }
+    };
+
     public String getIsAvailable() {
         return isAvailable;
     }
@@ -78,5 +103,21 @@ public class ProductMC {
 
 
     public ProductMC() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(price);
+        dest.writeString(isAvailable);
+        dest.writeString(imageUrl);
+        dest.writeString(time);
     }
 }

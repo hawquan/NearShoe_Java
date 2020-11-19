@@ -30,6 +30,7 @@ public class AdminProductManagement extends AppCompatActivity implements View.On
     FirebaseAuth mAuth;
     RecyclerView mRecyclerView;
     FloatingActionButton mFAB;
+    public static String type = "ADMIN";
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter<ProductMC, PostsViewHolder> firebasePostAdapter;
 
@@ -41,6 +42,7 @@ public class AdminProductManagement extends AppCompatActivity implements View.On
         FirebaseApp.initializeApp(this);
         initializeComponents();
         getPosts();
+
     }
 
     private void getPosts() {
@@ -61,6 +63,17 @@ public class AdminProductManagement extends AppCompatActivity implements View.On
                     holder.available.setText("Out of stock");
                 }
                 Glide.with(AdminProductManagement.this).load(myPost.getImageUrl()).fitCenter().into(holder.postImage);
+
+                holder.editPostImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(AdminProductManagement.this, ProductCrud.class);
+                        intent.putExtra("Source", "AdminProductManagement");
+                        intent.putExtra("Purpose", "EditProduct");
+                        intent.putExtra("Product",myPost);
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override
@@ -92,11 +105,12 @@ public class AdminProductManagement extends AppCompatActivity implements View.On
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder {
         TextView name, desc, amount, available, addToCart;
-        ImageView postImage;
+        ImageView postImage, editPostImage;
         CardView cardView;
 
         public PostsViewHolder(@NonNull View v) {
             super(v);
+            editPostImage = v.findViewById(R.id.editPost_id);
             addToCart = v.findViewById(R.id.postAddToCart_id);
             addToCart.setVisibility(View.GONE);
             cardView = v.findViewById(R.id.cardView_id);
@@ -124,6 +138,7 @@ public class AdminProductManagement extends AppCompatActivity implements View.On
     private void addProduct() {
         Intent intent = new Intent(AdminProductManagement.this, ProductCrud.class);
         intent.putExtra("Source", "AdminProductManagement");
+        intent.putExtra("Purpose", "AddProduct");
         startActivity(intent);
     }
 

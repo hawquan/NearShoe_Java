@@ -90,7 +90,6 @@ public class CustomerViewCart extends AppCompatActivity {
 
         getCartItemsFromRealTimeDatabase();
 
-
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,13 +154,13 @@ public class CustomerViewCart extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String items = "";
+                OrderItemMC orderItemMC = null;
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds != null) {
                         items += "(" + ds.child("quantity").getValue(String.class) + ")" + ds.child("itemName").getValue(String.class) + " ";
                         String currentUserId = mAuth.getCurrentUser().getUid();
                         String uniqueId = DBUtilClass.DB_ORDER_REF.child(currentUserId).push().getKey();
-
-                        OrderItemMC orderItemMC = new OrderItemMC();
+                        orderItemMC = new OrderItemMC();
                         orderItemMC.setOrderId(uniqueId);
                         orderItemMC.setAmount(totalAmountTV.getText().toString());
                         orderItemMC.setCustomerId(currentUserId);
@@ -171,24 +170,22 @@ public class CustomerViewCart extends AppCompatActivity {
                         orderItemMC.setFeedback("");
                         orderItemMC.setCustomerName(mAuth.getCurrentUser().getEmail());
                         orderItemMC.setRating("");
-
-
-                        DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                mProgressDialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(CustomerViewCart.this, CustomerDashboard.class);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(i);
-                                } else {
-                                    Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
                     }
                 }
+                DBUtilClass.DB_ORDER_REF.child(orderItemMC.getOrderId()).setValue(orderItemMC).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mProgressDialog.dismiss();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(CustomerViewCart.this, "Order placed successfully!!!", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(CustomerViewCart.this, CustomerDashboard.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        } else {
+                            Toast.makeText(CustomerViewCart.this, "Unable to place order due to " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
             }
 

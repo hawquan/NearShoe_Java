@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nearshoe_java.ModelClasses.ProductMC;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,7 +53,11 @@ public class ProductCrud extends AppCompatActivity implements View.OnClickListen
     RadioGroup availabilityStatusRG;
     RadioButton availableRB, unAvailableRB;
     Button btnSave;
+    Intent getDataIntent;
     boolean isAvailable = true;
+    String operationType = "";
+    boolean isToAddProduct = true;
+    ProductMC currentProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,23 @@ public class ProductCrud extends AppCompatActivity implements View.OnClickListen
         mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
         initializeComponents();
+        getDataIntent = getIntent();
+        operationType = getDataIntent.getStringExtra("Purpose");
+        if (operationType.equals("AddProduct")) {
+            isToAddProduct = true;
+        } else if (operationType.equals("EditProduct")) {
+            isToAddProduct = false;
+            currentProduct = getDataIntent.getParcelableExtra("Product");
+            Glide.with(ProductCrud.this).load(currentProduct.getImageUrl()).into(productImage);
+            etProd_name.setText(currentProduct.getName());
+            etProd_amount.setText(currentProduct.getPrice());
+            etProd_description.setText(currentProduct.getDescription());
+            if (currentProduct.getIsAvailable().equals("Available")) {
+                availableRB.setChecked(true);
+            } else {
+                unAvailableRB.setChecked(true);
+            }
+        }
     }
 
     private void initializeComponents() {
@@ -103,6 +125,10 @@ public class ProductCrud extends AppCompatActivity implements View.OnClickListen
         } else if (id == R.id.btnProductSave_id) {
             finalizePost();
         }
+    }
+
+    private void updateProduct() {
+        Toast.makeText(this, "Update Product", Toast.LENGTH_SHORT).show();
     }
 
     private void requestPermission() {
@@ -156,7 +182,17 @@ public class ProductCrud extends AppCompatActivity implements View.OnClickListen
             mProgressDialog.setTitle("Product");
             mProgressDialog.setMessage("Product details are being saved, please wait!!!");
             mProgressDialog.show();
-            uploadToFirebase(postPhotoUri, prodName, prodDesc, prodAmount, isAvailable);
+            if (isToAddProduct) {
+                uploadToFirebase(postPhotoUri, prodName, prodDesc, prodAmount, isAvailable);
+            } else {
+                if (postPhotoUri == null) {
+                    final String timeStamp = String.valueOf(System.currentTimeMillis());
+                    uploadRestDetails(prodName, prodDesc, prodAmount, timeStamp, isAvailable);
+                } else {
+                    uploadToFirebase(postPhotoUri, prodName, prodDesc, prodAmount, isAvailable);
+                }
+            }
+
         }
     }
 
@@ -183,35 +219,51 @@ public class ProductCrud extends AppCompatActivity implements View.OnClickListen
                         if (task.isSuccessful()) {
                             photoURL = task.getResult().toString();
                             Log.i("URL", photoURL);
-                            final String currentUser = mAuth.getCurrentUser().getUid();
-                            String uniqueId = mPostRef.child(currentUser).push().getKey();
-                            final ProductMC productMC = new ProductMC();
-                            productMC.setId(uniqueId);
-                            productMC.setName(prodName);
-                            productMC.setImageUrl(photoURL);
-                            productMC.setDescription(prodDesc);
-                            productMC.setPrice(prodAmount);
-                            productMC.setTime(timeStamp);
-                            if (isAvailable) {
-                                productMC.setIsAvailable("Available");
-                            } else {
-                                productMC.setIsAvailable("Out of stock");
-                            }
-
-                            mPostRef.child(uniqueId).setValue(productMC).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    mProgressDialog.dismiss();
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ProductCrud.this, "Product Information Saved Successfully!!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ProductCrud.this, "" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                            uploadRestDetails(prodName, prodDesc, prodAmount, timeStamp, isAvailable);
                         }
                     }
                 });
+            }
+        });
+    }
+
+    private void uploadRestDetails(String prodName, String prodDesc, String prodAmount, String timeStamp, boolean isAvailable) {
+        final String currentUser = mAuth.getCurrentUser().getUid();
+        final ProductMC productMC = new ProductMC();
+        String uniqueId = "";
+        if (isToAddProduct) {
+            uniqueId = mPostRef.child(currentUser).push().getKey();
+        } else {
+            uniqueId = currentProduct.getId();
+        }
+        productMC.setId(uniqueId);
+        productMC.setName(prodName);
+        if (isToAddProduct) {
+            productMC.setImageUrl(photoURL);
+        } else {
+            if (postPhotoUri == null) {
+                productMC.setImageUrl(currentProduct.getImageUrl());
+            } else {
+                productMC.setImageUrl(photoURL);
+            }
+        }
+        productMC.setDescription(prodDesc);
+        productMC.setPrice(prodAmount);
+        productMC.setTime(timeStamp);
+        if (isAvailable) {
+            productMC.setIsAvailable("Available");
+        } else {
+            productMC.setIsAvailable("Out of stock");
+        }
+        mPostRef.child(uniqueId).setValue(productMC).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                mProgressDialog.dismiss();
+                if (task.isSuccessful()) {
+                    Toast.makeText(ProductCrud.this, "Product Information Saved Successfully!!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ProductCrud.this, "" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

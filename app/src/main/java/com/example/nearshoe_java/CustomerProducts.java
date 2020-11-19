@@ -208,11 +208,13 @@ public class CustomerProducts extends AppCompatActivity {
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder {
         TextView name, desc, amount, available, addToCart;
-        ImageView postImage;
+        ImageView postImage, editPostImage;
         CardView cardView;
 
         public PostsViewHolder(@NonNull View v) {
             super(v);
+            editPostImage = v.findViewById(R.id.editPost_id);
+            editPostImage.setVisibility(View.GONE);
             addToCart = v.findViewById(R.id.postAddToCart_id);
             cardView = v.findViewById(R.id.cardView_id);
             name = v.findViewById(R.id.postName_id);
