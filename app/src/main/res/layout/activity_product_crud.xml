@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Product Amount"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
 
             <RadioGroup
                 android:id="@+id/availableStatusRG_id"

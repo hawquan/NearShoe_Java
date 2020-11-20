@@ -206,7 +206,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Purchase/Order History"
+            android:text="Click to View Purchase/Order History"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -216,6 +216,7 @@
             android:id="@+id/rv_purchaseHistory_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#fff222"
             tools:listitem="@layout/list_item_order_view_row" />
 
     </LinearLayout>

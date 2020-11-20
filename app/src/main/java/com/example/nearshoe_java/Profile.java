@@ -101,7 +101,6 @@ public class Profile extends AppCompatActivity {
                 Glide.with(Profile.this).load(R.drawable.ic_camera).into(profileImage);
             }
         }
-        //getCurrentUserInformation();
         btnGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +117,7 @@ public class Profile extends AppCompatActivity {
         if (userMC.getUserType().equals("Customer")) {
             getPosts();
         } else {
+            Log.i("FirebaseRecyclerAdapter", "Hiding Components");
             recyclerView.setVisibility(View.GONE);
             labelHistory.setVisibility(View.GONE);
         }
@@ -150,11 +150,23 @@ public class Profile extends AppCompatActivity {
 
     private void initializeComponents() {
         recyclerView = findViewById(R.id.rv_purchaseHistory_id);
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Profile.this, "Clicked on recyclerview", Toast.LENGTH_SHORT).show();
+            }
+        });
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(true);
         labelHistory = findViewById(R.id.label1_id);
+        labelHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Profile.this, TestHistory.class));
+            }
+        });
         mProgressDialog = new ProgressDialog(this);
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         btnGoBack = findViewById(R.id.back_id);
@@ -249,6 +261,7 @@ public class Profile extends AppCompatActivity {
     }
 
     private void getPosts() {
+        Log.i("FirebaseRecyclerAdapter", "Getting Posts");
         Query mPostsRef = DBUtilClass.DB_ORDER_REF.orderByChild("customerId").equalTo(mAuth.getCurrentUser().getUid());
         Log.i("FirebaseRecyclerAdapter", "gettingPosts");
         FirebaseRecyclerOptions<OrderItemMC> options = new FirebaseRecyclerOptions.Builder<OrderItemMC>()
